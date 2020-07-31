@@ -13,6 +13,7 @@
     "express": "^4.16.1",
     "knex": "^0.21.2",
     "objection": "^2.2.2",
+    "objection-password": "^2.0.0",
     "pg": "^8.3.0"
   }
 }
