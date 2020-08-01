@@ -17,7 +17,7 @@ router.post('/', async function(req, res) {
         //console.log(Object.keys(req))
         const user = await User.query().insert(req.body)
         res.json(user)
-    } catch (err) {
+    } catch(err) {
         console.log(err)
         if (err instanceof ValidationError) {
             for (const property in err.data) {
