@@ -1,0 +1,31 @@
+FROM ubuntu:18.04
+
+# config for ansible control node
+RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y \
+    apt-utils \
+    software-properties-common \
+    curl  \
+    ca-certificates \
+    git \ 
+    zip \ 
+    unzip \
+    vim \
+    net-tools \
+    keychain
+
+# apt-add-repository is inlcuded in software-properties-common
+RUN apt-add-repository ppa:ansible/ansible
+RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y ansible
+
+WORKDIR /root
+
+# copy copies files
+ADD /control_node /root/control_node
+
+#ENTRYPOINT ["/bin/bash"]
+RUN /bin/bash -c "source control_node/setup.sh"
+
+# https://hvops.com/articles/ansible-post-install/
+
+
+# add ansible hosts: [servers]\n wint_staging ansible_host=api2_host_1

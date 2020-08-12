@@ -1,0 +1,25 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - vars/default.yml
+
+  tasks: # https://stackoverflow.com/questions/36965199/ansible-wget-then-exec-scripts-get-url-equivalent
+    - name: Install aptitude using apt
+      apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'git', 'zip', 'vim', 'net-tools', 'build-essential' ]
+
+    - name: Download Node
+      get_url:
+        url: https://deb.nodesource.com/setup_12.x
+        dest: /tmp/nodesource_setup.sh
+        mode: 755
+
+    - name: Setup Node
+      shell: /tmp/nodesource_setup.sh
+
+    - name: Install Node
+      apt: name=nodejs state=present

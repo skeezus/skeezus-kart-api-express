@@ -4,6 +4,10 @@ const { NotFoundError, UniqueViolationError, ValidationError } = require('object
 
 const User = require('./models')
 
+// https://github.com/auth0/node-jsonwebtoken
+// https://github.com/SeyZ/jsonapi-serializer
+// https://stackoverflow.com/questions/4041114/what-is-database-pooling
+
 router.get('/', function(req, res) {
     //res.send('GET handler for /users route.');
     User.query()
@@ -18,7 +22,6 @@ router.post('/', async function(req, res) {
         const user = await User.query().insert(req.body)
         res.json(user)
     } catch(err) {
-        console.log(err)
         if (err instanceof ValidationError) {
             for (const property in err.data) {
                   console.log(`${property}: ${err.data[property]}`);

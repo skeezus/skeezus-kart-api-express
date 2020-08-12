@@ -1,0 +1,32 @@
+FROM ubuntu:18.04
+
+ENV PROJECT_NAME=kart
+
+WORKDIR /root/$PROJECT_NAME
+
+COPY ../package*.json ./
+
+# build-essential required for some npm packages to work src: https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-18-04
+RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y \
+    dialog \
+    apt-utils \
+    curl  \
+    ca-certificates \
+    git \
+    zip \
+    unzip \
+    vim \
+    net-tools \
+    build-essential 
+
+RUN curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh && bash nodesource_setup.sh
+RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y nodejs
+RUN npm config set loglevel warn && npm install -g nodemon && npm install
+
+RUN mkdir api && touch api/app.js
+
+ENTRYPOINT ["/bin/bash"]
+
+CMD ["./scripts/run_server.sh"]
+
+EXPOSE 3000 80
