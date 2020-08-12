@@ -9,15 +9,19 @@ RUN apt-get update && apt-get install --no-install-recommends --no-install-sugge
     python3-setuptools
   
 ENV PROJECT_NAME=kart
+ENV UNIX_PASS=coolpassword
 
 COPY ./package*.json ./
-WORKDIR /root/$PROJECT_NAME
 
-ENTRYPOINT ["/bin/bash"]
+WORKDIR /root
+ADD /scripts /root/scripts
+#RUN /bin/bash -c "scripts/setup_host_node.sh"
+
+# set unix password (this password is used for ssh)
+RUN echo 'PermitRootLogin yes' | tee -a /etc/ssh/sshd_config
+
+# adding bash to this is a way of keeping the program from exiting
+# https://stackoverflow.com/questions/25135897/how-to-automatically-start-a-service-when-running-a-docker-container
+CMD "scripts/setup_host_node.sh" && bash
 
 #EXPOSE 22 8080
-
-# need to start ssh daemon after installation
-# create ssh keys: 
-#https://www.cyberciti.biz/faq/ubuntu-debian-linux-server-install-keychain-apt-get-command/
-#https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys-on-ubuntu-1804

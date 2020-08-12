@@ -22,10 +22,13 @@ WORKDIR /root
 # copy copies files
 ADD /control_node /root/control_node
 
-#ENTRYPOINT ["/bin/bash"]
 RUN /bin/bash -c "source control_node/setup.sh"
+# https://github.com/kagux/docker-ssh-keygen/blob/master/keygen.sh
+RUN mkdir /root/.ssh && touch /root/.ssh/known_hosts
+#RUN ssh-keyscan -t rsa api2_host_1 >> ~/.ssh/known_hosts
+#RUN ssh-keygen -q -t rsa -N '' -f /root/.ssh/id_rsa
+
+#ENTRYPOINT ["/bin/bash"]
 
 # https://hvops.com/articles/ansible-post-install/
-
-
-# add ansible hosts: [servers]\n wint_staging ansible_host=api2_host_1
+# https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys-on-ubuntu-1804
